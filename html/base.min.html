@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="{{SETTINGS.theme}} {{LANG['direction']}} base-min">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title ? title : SETTINGS.site_name }}</title>
+    <meta name="description" content="{{SETTINGS.site_description}}">
+    {% if SETTINGS.favicon %}
+        <link rel="icon" type="image/png" href="{{MEDIA_URL}}/settings/{{SETTINGS.favicon}}"/>
+    {% endif %}
+    <title>{{SETTINGS.site_name}}</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{{STATIC_URL}}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/select2/select2.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template-->
+    <link href="{{STATIC_URL}}/css/styles.css?v={{CV}}" rel="stylesheet">
+    <link href="{{STATIC_URL}}/css/frontend.css?v={{CV}}" rel="stylesheet">
+    <link href="{{ url('color_css') }}" rel="stylesheet">
+    {% if SETTINGS.header_css %}
+        <style media="screen">
+            {{SETTINGS.header_css}}
+        </style>
+    {% endif %}
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    {% block container %}{% endblock %}
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/dropdown-datepicker/js/jquery.date-dropdowns.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/select2/select2.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script type="text/javascript">
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('.nav-item a[href="' + activeTab + '"]').tab('show');
+        }
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        $( document ).ready(function() {
+            // init date dropdown
+            $(".dob").dateDropdowns();
+            $('.select2').select2({
+                theme: 'bootstrap4'
+            });
+
+        });
+
+
+    </script>
+
+
+
+</body>
+
+</html>

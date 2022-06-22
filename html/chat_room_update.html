@@ -1,0 +1,231 @@
+<ul class="nav nav-pills mb2">
+    <li class="nav-item">
+        <a class="nav-link active" id="room-info-tab" data-toggle="pill" href="#room-info" role="tab" aria-controls="room-info" aria-selected="true"><i class="fas fa-person-booth"></i> {{_("General")}}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="room-users-tab" data-toggle="pill" href="#room-users" role="tab" aria-controls="room-users" aria-selected="false"><i class="fas fa-users"></i> {{_("Members")}}</a>
+    </li>
+    <!--
+    <li class="nav-item">
+        <a class="nav-link" id="room-embed-tab" data-toggle="pill" href="#room-embed" role="tab" aria-controls="room-embed" aria-selected="false"><i class="fas fa-laptop-code"></i> {{_("Embed")}} </a>
+    </li>
+    -->
+
+</ul>
+<hr style="margin-bottom:5px;">
+<div class="tab-content" id="v-pills-tabContent">
+    <div class="alert alert-danger chatroom-error" role="alert" style="display:none"></div>
+    <div class="alert alert-success chatroom-success" role="alert" style="display:none"></div>
+    <div class="tab-pane fade show active" id="room-info" role="tabpanel" aria-labelledby="room-info-tab">
+        <div class="card card-room-info">
+            <div class="card-body">
+                <h6>{{_("General Settings")}}</h6> <hr>
+                <form id="chatroom-info" enctype="multipart/form-data">
+                    {{ csrf_token()|raw }}
+                    <input type="hidden" name="room_id" id="room_id" value="{{chat_room.id}}">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="name">{{_('Name')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="{{_('Room Name')}}" value="{{chat_room.name}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="description">{{_('Description')}}</label>
+                        <div class="col-sm-9">
+                            <textarea name="description" maxlength="500" id="description" class="form-control" rows="4" placeholder="{{_('Room Description')}}">{{chat_room.description}}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="slug">{{_('Slug')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="{{_('Room Slug')}}" value="{{chat_room.slug}}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label"  for="is_protected">
+                            {{_("Password Protect")}}
+                        </label>
+                        <div class="col-sm-7">
+                            <label class="switch">
+                                <input type="checkbox" name="is_protected" id="is_protected"
+                                    {% if chat_room.is_protected %} checked {% endif %}>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class=" row">
+                        <label class="col-sm-3 col-form-label pin-area" {% if chat_room.is_protected %}style="display:block"{% else %}style="display:none"{% endif %} for="password"><span class="">Pin</span></label>
+                        <div class="col-sm-9 mb-2 pin-area" {% if chat_room.is_protected %}style="display:block"{% else %}style="display:none"{% endif %}>
+                            <input type="text" class="form-control" id="pin" name="pin" value="{{chat_room.password}}">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label"  for="is_visible">
+                            {{_("Visible to everyone")}}
+                        </label>
+                        <div class="col-sm-7">
+                            <label class="switch">
+                                <input type="checkbox" name="is_visible" id="is_visible"
+                                    {% if chat_room %}
+                                        {% if chat_room.is_visible %}
+                                            checked
+                                        {% endif %}
+                                    {% else %}
+                                        checked
+                                    {% endif %}>
+                              <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <input type="checkbox" style='display:none;' checked name="allowed_users[]" id="allow_admin" value="1" />
+                        {% if USER.user_type == 1 %}
+                        <label class="col-sm-5 col-form-label" for="allow_member">
+                            {{_("Allow Moderator Access")}}
+                        </label>
+                        <div class="col-sm-7">
+                            <label class="switch">
+                                <input type="checkbox" name="allowed_users[]" id="allow_moderators"  value="4"
+                                    {% if 4 in chat_room.allowed_users %} checked {% endif %}>
+                                    <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <label class="col-sm-5 col-form-label" for="allow_member">
+                            {{_("Allow Member Access")}}
+                        </label>
+                        <div class="col-sm-7">
+                            <label class="switch">
+                                <input type="checkbox" name="allowed_users[]" id="allow_member"  value="2"
+                                    {% if 2 in chat_room.allowed_users %} checked {% endif %}>
+                                    <span class="slider round"></span>
+                            </label>
+                        </div>
+                        {% elseif USER.user_type == 4 %}
+                        <input type="checkbox" style='display:none;' checked name="allowed_users[]" id="allow_moderators" value="4" />
+                        <label class="col-sm-5 col-form-label" for="allow_member">
+                            {{_("Allow Member Access")}}
+                        </label>
+                        <div class="col-sm-7">
+                            <label class="switch">
+                                <input type="checkbox" name="allowed_users[]" id="allow_member"  value="2"
+                                    {% if 2 in chat_room.allowed_users %} checked {% endif %}>
+                                    <span class="slider round"></span>
+                            </label>
+                        </div>
+                        {% else %}
+                            <input type="checkbox" style='display:none;' checked name="allowed_users[]" id="allow_moderators" value="4" />
+                            <input type="checkbox" style='display:none;' checked name="allowed_users[]" id="allow_member" value="2" />
+                        {% endif %}
+                        {% if SETTINGS.guest_mode %}
+                            <label class="col-sm-5 col-form-label" for="allow_guest">
+                                {{_("Allow Guest Access")}}
+
+                            </label>
+                            <div class="col-sm-7">
+                                <label class="switch">
+                                    <input type="checkbox" name="allowed_users[]" id="allow_guest" value="3"
+                                        {% if 3 in chat_room.allowed_users %} checked {% endif %}>
+                                        <span class="slider round"></span>
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="slug">{{_("Cover Image")}}</label>
+                        <div class="col-sm-6">
+                            <input type="file" class="form-control-file upload-cover-image" id="cover_image" name="cover_image" value="">
+                        </div>
+                        <div class="col-3">
+                            <div class="room-coverimage-preview">
+                                {% if chat_room.cover_image %}
+                                    <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/chatrooms/{{chat_room.cover_image}}"  alt="">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="status">{{_("Status")}}</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="status" id="status">
+                                <option value="1" {% if chat_room.status == 1 %} selected {% endif %}>{{_("Active")}}</option>
+                                <option value="2" {% if chat_room.status == 2 %} selected {% endif %}>{{_("Inactive")}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="card-footer card-footer p-0 pt-3">
+                <button type="button" class="btn btn-primary update-chatroom">{{_("Submit")}}</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="room-users" role="tabpanel" aria-labelledby="room-users-tab">
+        <div class="card card-room-users">
+            <div class="card-body">
+                <h6>{{_("Room Users")}}</h6> <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>{{_("Name")}}</th>
+                                <th>{{_("Email")}}</th>
+                                <th>{{_("User Type")}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for room_user in room_users %}
+                                <tr>
+                                    <td>{{room_user.first_name}} </td>
+                                    <td>{{room_user.email}}</td>
+                                    <td>
+                                        {% if room_user.user_type == 1 %}
+                                            Admin
+                                        {% elseif room_user.user_type == 2 %}
+                                            Member
+                                        {% elseif room_user.user_type == 3 %}
+                                            Guest
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if USER.user_type == 2 and room_user.user_type == 1 %}
+                                            &nbsp;
+                                        {% else %}
+                                            <a href="javascript:void(0)" class="btn btn-danger btn-xs chatroom-user-restriction kick-btn" data-user="{{room_user.id}}" data-restriction-type="3"
+                                                {% if room_user.status == "1" %} style="display:block" {% else %} style="display:none" {% endif %}>kick
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn btn-warning btn-xs chatroom-user-restriction unkick-btn" data-user="{{room_user.id}}" data-restriction-type="1"
+                                                {% if room_user.status == "3" %} style="display:block" {% else %} style="display:none" {% endif %}>unkick
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer card-footer p-0 pt-3">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger ">{{_("Close")}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="room-embed" role="tabpanel" aria-labelledby="room-embed-tab">
+        <div class="card card-room-embed">
+            <div class="card-body">
+                <h6>{{_("Embed Chat Room")}}</h6> <hr>
+                <p>{{_("Here is the iframe embed code to this chat room. You can copy and paste this on your website.")}}</p>
+                <p>{{_("Update height and width parameters accourding to your requirements.")}}</p>
+                <code>
+                    &lt;iframe src=&quot;{{ SITE_URL }}{{chat_room.slug}}&quot; width=&quot;600px&quot; height=&quot;600px&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;
+                </code>
+            </div>
+        </div>
+    </div>
+</div>

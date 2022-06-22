@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="{{SETTINGS.theme}} {{LANG['direction']}}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no shrink-to-fit=no">
+    {% if SETTINGS.favicon %}
+    <link rel="icon" type="image/png" href="{{MEDIA_URL}}/settings/{{SETTINGS.favicon}}"/>
+    {% endif %}
+    <title>{{ chat_room.name }} - {{ SETTINGS.site_name }}</title>
+    {% if chat_room.description %}
+    <meta name="description" content="{{ chat_room.description }}" />
+    {% else %}
+    <meta name="description" content="Join with {{ chat_room.name }} chat room at {{SETTINGS.site_name}}.
+    {% if not chat_room.is_visible %}
+    {{ chat_room.name }} is public chat room. Everyone on {{SETTINGS.site_name}} will be able to join.
+    {% else %}
+    {{ chat_room.name }} is private chat room. Only people with the invite link will be able to join.
+    {% endif %}
+    {% if chat_room.is_protected %}
+    You need {{ chat_room.name }} password to log in to the chat room.
+    {% endif %}" />
+    {% endif %}
+    {% if chat_room.cover_image %}
+    <meta property="og:image" content="{{MEDIA_URL}}/chatrooms/{{chat_room.cover_image}}" />
+    {% elseif  SETTINGS.default_ogimage %}
+    <meta property="og:image" content="{{MEDIA_URL}}/settings/{{SETTINGS.default_ogimage}}" />
+    {% else %}
+    <meta property="og:image" content="{{STATIC_URL}}/img/ogimage.png" />
+    {% endif %}
+    <link href="{{STATIC_URL}}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="{{STATIC_URL}}/css/styles.css?v={{CV}}" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="{{STATIC_URL}}/vendor/emojione/emojionearea.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/dropzone/css/dropzone.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/photoswipe/photoswipe.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/photoswipe/default-skin/default-skin.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/css/flag-icon.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/select2/select2.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}/vendor/toastr/toastr.min.css" rel="stylesheet" type="text/css">
+    {% if SETTINGS.animate_css %}
+    <link href="{{STATIC_URL}}/css/animate.min.css" rel="stylesheet">
+    {% endif %}
+    <link href="{{STATIC_URL}}/css/frontend.css?v={{CV}}" rel="stylesheet">
+    <link href="{{ url('color_css') }}" rel="stylesheet">
+    {% if SETTINGS.header_css %}
+    <style media="screen">
+        {{SETTINGS.header_css}}
+    </style>
+    {% endif %}
+    {% block styles %} {% endblock %}
+</head>
+<body id="page-top">
+    {% block content %} {% endblock %}
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    {% block modals %} {% endblock %}
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{_("Ready to Leave?")}}</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">{{_("Select Logout below if you are ready to end your current session.")}}</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">{{_("Cancel")}}</button>
+                    <a class="btn btn-primary" href="{{ url('logout') }}">{{_("Logout")}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade rooms-modal" tabindex="-1" role="dialog" aria-labelledby="roomsModel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {% include 'chat_room_update.html' %}
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- Profile Modal -->
+    {% include 'profile_modal.html' %}
+    {% include 'chat_room_list_modal.html' %}
+    <!-- ChatNet core JavaScript-->
+    {% if SETTINGS.cookie_consent_popup %}
+    <!-- START Cookie Alert -->
+    <div class="alert text-center cookiealert" role="alert">
+        {% if SETTINGS.cookie_consent_message %}
+            {{ SETTINGS.cookie_consent_message|raw }}
+        {% else %}
+        <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website.
+        <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
+        {% endif %}
+        <button type="button" class="btn btn-primary btn-sm acceptcookies">
+            {{_("I agree")}}
+        </button>
+    </div>
+    <!-- END Cookie Alert -->
+    {% endif %}
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery-ui.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/dropzone/js/dropzone.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/dropdown-datepicker/js/jquery.date-dropdowns.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/emojione/emojionearea.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/photoswipe/photoswipe.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/photoswipe/photoswipe-ui-default.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery.waypoints.min.js"></script>
+    {% if SETTINGS.nice_scroll %}
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery.nicescroll.min.js"></script>
+    {% endif %}
+    <script src="{{STATIC_URL}}/js/moment.min.js"></script>
+    <script src="{{STATIC_URL}}/js/moment-timezone-with-data.min.js"></script>
+    <script src="{{STATIC_URL}}/js/loadingoverlay.min.js" ></script>
+    <script src="{{STATIC_URL}}/vendor/lazyload/jquery.lazy.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/web-audio-recorder/WebAudioRecorder.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/web-audio-recorder/player.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/select2/select2.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/toastr/toastr.min.js" ></script>
+    {% if SETTINGS.show_snow %}
+    <script src="{{STATIC_URL}}/js/snow.min.js" ></script>
+    {% endif %}
+    <script src="{{ url('scripts_js') }}"></script>
+    {% block scripts %} {% endblock %}
+</body>
+</html>

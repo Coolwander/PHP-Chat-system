@@ -1,0 +1,54 @@
+{% extends "base.index.html" %}
+{% block content %}
+<section class="bg-white py-5 main-content {% if SETTINGS.homepage_banner_view == '0' %}no-header{% endif %}">
+    <div class="container">
+        <span class="chat-list-header">
+            <h2 class="mb-2">{{ _("Contact Us") }}</h2>
+        </span>
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card">
+
+                    <div class="card-body">
+                        {{ msg() }}
+                        <form method="POST" action="{{url('contact')}}">
+                            {{ csrf_token()|raw }}
+                            <div class="form-group">
+                                <label for="name">{{_("Your Name")}}</label>
+                                <input type="text" class="form-control" name="contact_name" id="contact_name" aria-describedby="emailHelp" placeholder="{{_('Enter Name')}}" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">{{_("Your Email")}}</label>
+                                <input type="email" class="form-control" name="contact_email" id="contact_email" aria-describedby="emailHelp" placeholder="{{_('Enter email')}}" required="">
+                                <small id="emailHelp" class="form-text text-muted">{{_("We'll never share your email with anyone else.")}}</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">{{_("Message")}}</label>
+                                <textarea class="form-control" name="contact_message" id="contact_message" rows="6" required=""></textarea>
+                            </div>
+                            <div class="mx-auto">
+                                <button type="submit" class="btn btn-primary text-right">{{_("Send Message")}}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">{{_("Get In Touch With Us")}}</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if SETTINGS.contact_us_address_1 %}<p>{{SETTINGS.contact_us_address_1}}</p>{% endif %}
+                        {% if SETTINGS.contact_us_address_2 %}<p>{{SETTINGS.contact_us_address_2}}</p>{% endif %}
+                        {% if SETTINGS.contact_us_address_3 %}<p>{{SETTINGS.contact_us_address_3}}</p>{% endif %}
+                        {% if SETTINGS.contact_us_email %}<p><i class="fas fa-envelope"></i> {{SETTINGS.contact_us_email}}</p>{% endif %}
+                        {% if SETTINGS.contact_us_phone %}<p><i class="fas fa-phone"></i> {{SETTINGS.contact_us_phone}}</p>{% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

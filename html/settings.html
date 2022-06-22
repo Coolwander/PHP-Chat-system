@@ -1,0 +1,537 @@
+<!-- Large modal -->
+<div class="modal fade settings-modal" tabindex="-1" role="dialog" aria-labelledby="settingsModel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="general-tab" data-toggle="pill" href="#general-settings-tab" role="tab" aria-controls="general-settings" aria-selected="true">General Settings</a>
+                            <a class="nav-link" id="email-tab" data-toggle="pill" href="#email-settings-tab" role="tab" aria-controls="email-settings" aria-selected="false">Email Settings</a>
+                            <a class="nav-link" id="timing-tab" data-toggle="pill" href="#timing-settings-tab" role="tab" aria-controls="timing-settings" aria-selected="false">Timing Settings</a>
+                            <a class="nav-link" id="image-tab" data-toggle="pill" href="#image-settings-tab" role="tab" aria-controls="icon-settings" aria-selected="false">Image Settings</a>
+                            <a class="nav-link" id="color-tab" data-toggle="pill" href="#color-settings-tab" role="tab" aria-controls="color-settings" aria-selected="false">Color Settings</a>
+                            <a class="nav-link" id="homepage-tab" data-toggle="pill" href="#homepage-settings-tab" role="tab" aria-controls="homepage-settings" aria-selected="false">Home Page</a>
+                            <a class="nav-link" id="header-tab" data-toggle="pill" href="#header-settings-tab" role="tab" aria-controls="header-settings" aria-selected="false">Header Settings</a>
+                            <a class="nav-link" id="footer-tab" data-toggle="pill" href="#footer-settings-tab" role="tab" aria-controls="footer-settings" aria-selected="false">Footer Settings</a>
+                            <a class="nav-link" id="gif-tab" data-toggle="pill" href="#gif-settings-tab" role="tab" aria-controls="gif-settings" aria-selected="false">GIF Settings</a>
+                            <a class="nav-link" id="policy-tab" data-toggle="pill" href="#policy-settings-tab" role="tab" aria-controls="policy-settings" aria-selected="false">Policies</a>
+                            <a class="nav-link" data-dismiss="modal" href="javascript:void(0);" aria-label="Close" >Close</a>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <div class="alert alert-danger settings-error" role="alert" style="display:none"></div>
+                            <div class="alert alert-success settings-success" role="alert" style="display:none"></div>
+                            <div class="tab-pane fade show active" id="general-settings-tab" role="tabpanel" aria-labelledby="general-tab">
+                                <div class="card card-general-settings">
+                                    <div class="card-body">
+                                        <form id="general-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="site_name">Site Name</label>
+                                                <input type="text" class="form-control" id="site_name" name="site_name" placeholder="Site Name" value="{{SETTINGS.site_name}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="timezone">Tiemzone</label>
+                                                <select class="form-control" id="timezone" name="timezone">
+                                                    {{timezone_list|raw}}
+                                                </select>
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="general-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="email-settings-tab" role="tabpanel" aria-labelledby="email-tab">
+                                <div class="card card-email-settings">
+                                    <div class="card-body">
+                                        <form id="email-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="email_host">Email Host</label>
+                                                <input type="text" class="form-control" id="email_host" name="email_host" value="{{SETTINGS.email_host}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email_username">Email Username</label>
+                                                <input type="text" class="form-control" id="email_username" name="email_username" value="{{SETTINGS.email_username}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email_password">Email Password</label>
+                                                <input type="text" class="form-control" id="email_password" name="email_password" value="{{SETTINGS.email_password}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email_port">Email Port</label>
+                                                <select class="form-control" name="email_port" id="email_port">
+                                                    <option value="587" {% if SETTINGS.email_port == "587" %}selected{% endif %} >587 - Secure (TLS)</option>
+                                                    <option value="25" {% if SETTINGS.email_port == "25" %}selected{% endif %} >25 - Non-Encrypted</option>
+                                                    <option value="465" {% if SETTINGS.email_port == "465" %}selected{% endif %} >465 - Secure (SSL)</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email_from_address">From Email Address</label>
+                                                <input type="text" class="form-control" id="email_from_address" name="email_from_address" value="{{SETTINGS.email_from_address}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email_from_name">From Email Name</label>
+                                                <input type="text" class="form-control" id="email_from_name" name="email_from_name" value="{{SETTINGS.email_from_name}}">
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="email-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="timing-settings-tab" role="tabpanel" aria-labelledby="timing-tab">
+                                <div class="card card-timing-settings">
+                                    <div class="card-body">
+                                        <form id="timing-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="chat_receive_check_seconds">New chat receive every (Seconds)</label>
+                                                <input type="number" class="form-control" id="chat_receive_seconds" name="chat_receive_seconds" value="{{SETTINGS.chat_receive_seconds}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="user_list_check_seconds">User list updates every (Seconds)</label>
+                                                <input type="number" class="form-control" id="user_list_check_seconds" name="user_list_check_seconds" value="{{SETTINGS.user_list_check_seconds}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="chat_status_check_seconds">Chat delivery status updates every (Seconds)</label>
+                                                <input type="number" class="form-control" id="chat_status_check_seconds" name="chat_status_check_seconds" value="{{SETTINGS.chat_status_check_seconds}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="online_status_check_seconds">User online status updates every (Seconds)</label>
+                                                <input type="number" class="form-control" id="online_status_check_seconds" name="online_status_check_seconds" value="{{SETTINGS.online_status_check_seconds}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="typing_status_check_seconds">User typing status updates every (Seconds)</label>
+                                                <input type="number" class="form-control" id="typing_status_check_seconds" name="typing_status_check_seconds" value="{{SETTINGS.typing_status_check_seconds}}">
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="timing-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="image-settings-tab" role="tabpanel" aria-labelledby="icons-tab">
+                                <div class="card card-image-settings">
+                                    <div class="card-body">
+                                        <form id="image-settings" enctype="multipart/form-data">
+                                            {{ csrf_token()|raw }}
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="logo">Logo</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="logo" name="logo" value="{{SETTINGS.logo}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview" style="height:{{IMAGE_SIZE.logo.height}}px; width:{{IMAGE_SIZE.logo.width}}px">
+                                                        {% if SETTINGS.logo %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="small_logo">Small Logo</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="small_logo" name="small_logo" value="{{SETTINGS.small_logo}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview" style="height:{{IMAGE_SIZE.small_logo.height}}px; width:{{IMAGE_SIZE.small_logo.width}}px">
+                                                        {% if SETTINGS.small_logo %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.small_logo}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="favicon">Favicon</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="favicon" name="favicon" value="{{SETTINGS.favicon}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview" style="height:{{IMAGE_SIZE.favicon.height}}px; width:{{IMAGE_SIZE.favicon.width}}px">
+                                                        {% if SETTINGS.favicon %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.favicon}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="home_page_image">Home Page Image</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="home_page_image" name="home_page_image" value="{{SETTINGS.home_page_image}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview">
+                                                        {% if SETTINGS.home_page_image %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.home_page_image}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="login_page_image">Login Page Image</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="login_page_image" name="login_page_image" value="{{SETTINGS.login_page_image}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview">
+                                                        {% if SETTINGS.login_page_image %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.login_page_image}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="register_page_image">Register Page Image</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="register_page_image" name="register_page_image" value="{{SETTINGS.register_page_image}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview">
+                                                        {% if SETTINGS.register_page_image %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.register_page_image}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-9">
+                                                    <label for="forget_password_page_image">Forget Password Page Image</label>
+                                                    <input type="file" class="form-control-file upload-setting-image" id="forget_password_page_image" name="forget_password_page_image" value="{{SETTINGS.forget_password_page_image}}">
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="setting-image-preview">
+                                                        {% if SETTINGS.forget_password_page_image %}
+                                                            <img class="img-responsive" height="100%" src="{{MEDIA_URL}}/settings/{{SETTINGS.forget_password_page_image}}"  alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="image-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="color-settings-tab" role="tabpanel" aria-labelledby="color-tab">
+                                <div class="card card-color-settings">
+                                    <div class="card-body">
+                                        <form id="color-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div>
+                                                <label class="h4"><b>Homepage Colors</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="home_bg_gradient_1">Background Gradient 1</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="home_bg_gradient_1" value="{{SETTINGS.home_bg_gradient_1|default('#1da1f5')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.home_bg_gradient_1|default('#1da1f5')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="home_bg_gradient_2">Background Gradient 2</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="home_bg_gradient_2" value="{{SETTINGS.home_bg_gradient_2|default('#8038d9')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.home_bg_gradient_2|default('#8038d9')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="home_text_color">Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="home_text_color" value="{{SETTINGS.home_text_color|default('#555555')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.home_text_color|default('#555555')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="home_header_bg_color">Header background color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="home_header_bg_color" value="{{SETTINGS.home_header_bg_color|default('#1f2d41')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.home_header_bg_color|default('#1f2d41')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="home_header_text_color">Header Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="home_header_text_color" value="{{SETTINGS.home_header_text_color|default('#ffffff')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.home_header_text_color|default('#ffffff')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <label class="h4"><b>Chatpage - User List</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_userlist_bg_gradient_1">Background Gradient 1</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_userlist_bg_gradient_1" value="{{SETTINGS.chat_userlist_bg_gradient_1|default('#4e4f53')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_userlist_bg_gradient_1|default('#4e4f53')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_userlist_bg_gradient_2">Background Gradient 2</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_userlist_bg_gradient_2" value="{{SETTINGS.chat_userlist_bg_gradient_2|default('#1f2024')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_userlist_bg_gradient_2|default('#1f2024')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="chat_userlist_text_color">User List Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_userlist_text_color" value="{{SETTINGS.chat_userlist_text_color|default('#ffffff')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_userlist_text_color|default('#ffffff')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <label class="h4"><b>Chatpage - Chat Container</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_bg_gradient_1">Background Gradient 1</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_bg_gradient_1" value="{{SETTINGS.chat_container_bg_gradient_1|default('#ffffff')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_bg_gradient_1|default('#ffffff')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_bg_gradient_2">Background Gradient 2</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_bg_gradient_2" value="{{SETTINGS.chat_container_bg_gradient_2|default('#ffffff')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_bg_gradient_2|default('#ffffff')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="chat_container_text_color">Chat Container Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_text_color" value="{{SETTINGS.chat_container_text_color|default('#858796')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_text_color|default('#858796')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <label class="h4"><b>Chatpage - Chat Container - Received Chat</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_received_bubble_color">Bubble Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_received_bubble_color" value="{{SETTINGS.chat_container_received_bubble_color|default('#f5f5f5')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_received_bubble_color|default('#f5f5f5')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_received_text_color">Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_received_text_color" value="{{SETTINGS.chat_container_received_text_color|default('#858796')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_received_text_color|default('#858796')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="chat_container_username_text_color">Group Chat Username Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_username_text_color" value="{{SETTINGS.chat_container_username_text_color|default('#4e73df')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_username_text_color|default('#4e73df')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <label class="h4"><b>Chatpage - Chat Container - Sent Chat</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_sent_bubble_color">Bubble Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_sent_bubble_color" value="{{SETTINGS.chat_container_sent_bubble_color|default('#435f7a')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_sent_bubble_color|default('#435f7a')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_container_sent_text_color">Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_container_sent_text_color" value="{{SETTINGS.chat_container_sent_text_color|default('#f5f5f5')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_container_sent_text_color|default('#f5f5f5')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div>
+                                                <label class="h4"><b>Chatpage - Chat Info</b></label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_info_bg_gradient_1">Background Gradient 1</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_info_bg_gradient_1" value="{{SETTINGS.chat_info_bg_gradient_1|default('#e9ebec')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_info_bg_gradient_1|default('#e9ebec')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="chat_info_bg_gradient_2">Background Gradient 2</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_info_bg_gradient_2" value="{{SETTINGS.chat_info_bg_gradient_2|default('#cfd3d6')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_info_bg_gradient_2|default('#cfd3d6')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="chat_info_section_header_color">Chat Info Section Header Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_info_section_header_color" value="{{SETTINGS.chat_info_section_header_color|default('#2b3036')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_info_section_header_color|default('#2b3036')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="chat_info_text_color">Chat Info Text Color</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="chat_info_text_color" value="{{SETTINGS.chat_info_text_color|default('#455A64')}}" class="form-control w-75 color-input">
+                                                        <input type="color" value="{{SETTINGS.chat_info_text_color|default('#455A64')}}" class="form-control color-picker">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary update-settings" value="color-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="homepage-settings-tab" role="tabpanel" aria-labelledby="homepage-tab">
+                                <div class="card card-homepage-settings">
+                                    <div class="card-body">
+                                        <form id="homepage-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="homepage_banner_view">Home page banner</label>
+                                                <select class="form-control" name="homepage_banner_view" id="homepage_banner_view">
+                                                    <option value="1" {% if SETTINGS.homepage_banner_view == "1" %}selected{% endif %} >Yes</option>
+                                                    <option value="0" {% if SETTINGS.homepage_banner_view == "0" %}selected{% endif %} >No</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="homepage_title">Home page title</label>
+                                                <input type="text" class="form-control" id="homepage_title" name="homepage_title" value="{{SETTINGS.homepage_title}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="homepage_description">Home page description</label>
+                                                <textarea name="homepage_description" id="homepage_description" class="form-control" rows="5" cols="80">{{SETTINGS.homepage_description}}</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="homepage_chat_room_limit">Chat room limit</label>
+                                                <input type="number" name="homepage_chat_room_limit" id="homepage_chat_room_limit" class="form-control" value="{{SETTINGS.homepage_chat_room_limit?SETTINGS.homepage_chat_room_limit:6}}" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="homepage_chat_room_view">Chat room view</label>
+                                                <select class="form-control" name="homepage_chat_room_view" id="homepage_chat_room_view">
+                                                    <option value="small" {% if SETTINGS.homepage_chat_room_view == "small" %}selected{% endif %} >Small</option>
+                                                    <option value="large" {% if SETTINGS.homepage_chat_room_view == "large" %}selected{% endif %} >Large</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="chatroom_list_title">Chat room list title</label>
+                                                <input type="text" class="form-control" id="chatroom_list_title" name="chatroom_list_title" value="{{SETTINGS.chatroom_list_title}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="chatroom_list_description">Chat room list description</label>
+                                                <textarea name="chatroom_list_description" id="chatroom_list_description" class="form-control" rows="5" cols="80">{{SETTINGS.chatroom_list_description}}</textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="homepage-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="header-settings-tab" role="tabpanel" aria-labelledby="header-tab">
+                                <div class="card card-header-settings">
+                                    <div class="card-body">
+                                        <form id="header-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="header_css">Header CSS</label>
+                                                <textarea name="header_css" id="header_css" class="form-control" rows="8" cols="80">{{SETTINGS.header_css|raw}}</textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="header-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="footer-settings-tab" role="tabpanel" aria-labelledby="footer-tab">
+                                <div class="card card-footer-settings">
+                                    <div class="card-body">
+                                        <form id="footer-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="copyright">Copyright text</label>
+                                                <input type="text" class="form-control" id="copyright" name="copyright" value="{{SETTINGS.copyright}}">
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="footer-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="gif-settings-tab" role="tabpanel" aria-labelledby="gif-tab">
+                                <div class="card card-gif-settings">
+                                    <div class="card-body">
+                                        <form id="gif-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="tenor_api_key">Tenor API Key</label>
+                                                <input type="text" class="form-control" id="tenor_api_key" name="tenor_api_key" placeholder="Tenor API Key" value="{{SETTINGS.tenor_api_key}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tenor_gif_limit">GIF Limit</label>
+                                                <input type="number" class="form-control" id="tenor_gif_limit" name="tenor_gif_limit" placeholder="GIF LIMIT" value="{{SETTINGS.tenor_gif_limit}}">
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="gif-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="policy-settings-tab" role="tabpanel" aria-labelledby="policy-tab">
+                                <div class="card card-policy-settings">
+                                    <div class="card-body">
+                                        <form id="policy-settings">
+                                            {{ csrf_token()|raw }}
+                                            <div class="form-group">
+                                                <label for="terms_and_conditions">Terms & Conditions</label>
+                                                <textarea name="terms_and_conditions" id="terms_and_conditions" class="form-control summernote" rows="8" cols="80">{{SETTINGS.terms_and_conditions|raw}}</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="privacy_policy">Privacy Policy</label>
+                                                <textarea name="privacy_policy" id="privacy_policy" class="form-control summernote" rows="8" cols="80">{{SETTINGS.privacy_policy|raw}}</textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-primary update-settings" value="policy-settings">Update</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

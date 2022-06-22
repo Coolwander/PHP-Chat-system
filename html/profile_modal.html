@@ -1,0 +1,90 @@
+<div class="modal profile-modal fade animate__animated" id="modalProfile" tabindex="-1" role="dialog" aria-labelledby="modalProfileTitle" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProfileTitle">{{ USER.first_name }}  @{{ USER.user_name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger profile-error" role="alert" style="display:none"></div>
+                <div class="alert alert-success profile-success" role="alert" style="display:none"></div>
+                <form id="profile-form" enctype="multipart/form-data">
+                    <input type="hidden" id="save_profile_url" value="{{url('ajax-save-profile')}}">
+                    {{ csrf_token()|raw }}
+                    <div class="form-group row">
+                        <div class="col-sm-5 imgUp mx-auto d-block">
+                            <div class="imagePreview">
+                                <img class="img-responsive" height="100%" src="{{USER.avatar_url}}"  alt="">
+                                <label class="btn btn-primary btn-upload">
+                                    <i class="fas fa-camera"></i> <input type="file" class="upload-image" name="avatar" value="Upload Photo">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-7 ">
+                            <label for="last_name" class="">{{_("What's on your mind?")}}</label>
+                            <textarea name="about" id="about" rows="6" class="form-control" placeholder="{{_('Discribe who you are')}}">{{ USER.about }}</textarea>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger profile-error" role="alert" style="display:none"></div>
+                    <div class="form-group row">
+                        <label for="first_name" class="col-sm-3 col-form-label">{{_("First Name")}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ USER.first_name }}" placeholder="{{_('First Name')}}">
+                        </div>
+                    </div>
+                  
+
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-3 col-form-label">{{_("Email")}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="email" name="email" value="{{ USER.email }}" placeholder="{{_('Email')}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="dob" class="col-sm-3 col-form-label">{{_("Birthday")}}</label>
+                        <div class="col-sm-9 date-dropdown">
+                            <input type="hidden" class="form-control dob" id="dob" name="dob" value="{{ USER.dob }}" placeholder="{{_('Birthday')}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sex" class="col-sm-3 col-form-label">{{_("Gender")}}</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="sex" name="sex">
+                                <option value="1" {% if USER.sex == 1 %}selected{% endif %}>{{_("Male")}}</option>
+                                <option value="2" {% if USER.sex == 2 %}selected{% endif %}>{{_("Female")}}</option>
+                                <option value="3" {% if USER.sex == 3 %}selected{% endif %}>{{_("Other")}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sex" class="col-sm-3 col-form-label">{{_("Country")}}</label>
+                        <div class="col-sm-9">
+                            <select class="form-control select2" id="country" name="country">
+                                <option value=""></option>
+                                {% for country_code, country_name in country_list %}
+                                    <option {% if USER.country == country_code %}selected{% endif %} value="{{ country_code }}">{{ country_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sex" class="col-sm-3 col-form-label">{{_("Timezone")}}</label>
+                        <div class="col-sm-9">
+                            <select class="form-control select2" id="timezone" name="timezone">
+                                {{timezone_list|raw}}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{_("Close")}}</button>
+                {% if USER.user_type in [1,2] %}
+                <button type="button" class="btn btn-primary save-profile">{{_("Save Changes")}}</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

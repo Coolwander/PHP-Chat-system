@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" class="{{SETTINGS.theme}} {{LANG['direction']}}">
+<head>
+    <meta charset=UTF-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>{{ title ? title : SETTINGS.site_name }}</title>
+    <meta name="description" content="{{SETTINGS.site_description}}" />
+    {% if  SETTINGS.default_ogimage %}
+    <meta property="og:image" content="{{MEDIA_URL}}/settings/{{SETTINGS.default_ogimage}}" />
+    {% else %}
+    <meta property="og:image" content="{{STATIC_URL}}/img/ogimage.png" />
+    {% endif %}
+    {% if SETTINGS.favicon %}
+    <link rel="icon" type="image/png" href="{{MEDIA_URL}}/settings/{{SETTINGS.favicon}}"/>
+    {% endif %}
+    <title>{{SETTINGS.site_name}}</title>
+    <link href="{{STATIC_URL}}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="{{STATIC_URL}}/css/styles.css?v={{CV}}" rel="stylesheet">
+    <link href="{{STATIC_URL}}/css/index.css?v={{CV}}" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="{{STATIC_URL}}/css/flag-icon.min.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}/vendor/select2/select2.min.css" rel="stylesheet" />
+    <link href="{{STATIC_URL}}/vendor/toastr/toastr.min.css" rel="stylesheet" type="text/css">
+    {% if SETTINGS.animate_css %}
+    <link href="{{STATIC_URL}}/css/animate.min.css" rel="stylesheet">
+    {% endif %}
+    <link href="{{ url('color_css') }}" rel="stylesheet">
+    {% if SETTINGS.header_css %}
+    <style media="screen">
+        {{SETTINGS.header_css}}
+    </style>
+    {% endif %}
+	
+	<!--支持正版：bbs.youmi58.com QQ:1218898720	新码资源:http://bbs.youmi58.com  -->
+</head>
+<body>
+    <div id="layoutDefault">
+        <div id="layoutDefault_content">
+            <main>
+                <nav class="navbar navbar-marketing navbar-expand-lg bg-transparent navbar-dark fixed-top {% if SETTINGS.homepage_banner_view == '0' %}navbar-no-header{% endif %}">
+                    <div class="container">
+                        <a class="navbar-brand text-white logo" href="{{ url('index') }}">
+                            {% if SETTINGS.logo %}
+                                <img class="mr-2 large" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}">
+                            {% else %}
+                                <img class="mr-2 large" src="{{STATIC_URL}}/img/logo.png">
+                            {% endif %}
+                            {% if SETTINGS.small_logo %}
+                                <img class="mr-2 small" src="{{MEDIA_URL}}/settings/{{SETTINGS.small_logo}}">
+                            {% else %}
+                                <img class="mr-2 small" src="{{STATIC_URL}}/img/logo_small.png">
+                            {% endif %}
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu" class="fa fa-bars"></i></button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto mr-lg-5">
+                                <li class="nav-item "><a class="nav-link" href="{{ url('index') }}">{{ _('Home') }}</a></li>
+                                {% if SETTINGS.enable_about %}
+                                <li class="nav-item "><a class="nav-link" href="{{ url('about') }}">{{ _('About') }}</a></li>
+                                {% endif %}
+                                {% if SETTINGS.enable_contact %}
+                                <li class="nav-item "><a class="nav-link" href="{{ url('contact') }}">{{ _('Contact') }}</a></li>
+                                {% endif %}
+                                {% if (SETTINGS.enable_members_room is defined and SETTINGS.enable_members_room) and USER.user_type == 2 %}
+                                <li class="nav-item "><a href="javascript:void(0)" class="nav-link new-chatroom"><i class="fas fa-plus"></i> {{ _('Chat Room') }}</a></li>
+                                {% elseif (SETTINGS.enable_moderators_room is defined and SETTINGS.enable_moderators_room) and USER.user_type == 4 %}
+                                <li class="nav-item "><a href="javascript:void(0)" class="nav-link new-chatroom"><i class="fas fa-plus"></i> {{ _('Chat Room') }}</a></li>
+                                {% elseif USER.user_type == 1 %}
+                                <li class="nav-item "><a href="javascript:void(0)" class="nav-link new-chatroom"><i class="fas fa-plus"></i> {{ _('Chat Room') }}</a></li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <div class="dropdown lang-selector">
+                                        <button class="btn btn-sm btn-lang dropdown-toggle" type="button" id="langSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span id="selected-lang-toggle"><span class="flag-icon flag-icon-{{ LANG['country'] }}"></span> {{ LANG['name'] }}</span>
+                                        </button>
+                                        <div class="dropdown-menu scrollable-menu" aria-labelledby="langSelector">
+                                            {% for select_lang in lang_list %}
+                                                <a class="dropdown-item {% if select_lang.code == LANG %}selected-lang{%endif%}" href="{{ url('setlang', {'reqlang':select_lang.code}) }}">
+                                                    <span class="flag-icon flag-icon-{{select_lang.country}}"></span> {{select_lang.name}}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </li>
+                                {% if USER %}
+                                    <li class="nav-item dropdown no-caret">
+                                        <a class="nav-link dropdown-toggle btn-teal btn px-4 ml-lg-4" id="navbarDropdownDocs" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {% if SETTINGS.display_name_format == 'username' %}
+                                                {{ USER.user_name }}
+                                            {% else %}
+                                                {{ USER.first_name }}
+                                            {% endif %}
+                                            <i class="fas fa-chevron-right dropdown-arrow"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right animated--fade-in" aria-labelledby="navbarDropdownDocs">
+                                            <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#modalProfile">
+                                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> {{ _('Profile') }}
+                                            </a>
+                                            {% if USER.user_type == 1 %}
+                                                <a class="dropdown-item py-3" target="_blank" href="{{ url('dashboard') }}">
+                                                    <i class="fas fa-user-shield fa-sm fa-fw mr-2 text-gray-400"></i> {{ _('Admin Dashboard') }}
+                                                </a>
+                                            {% endif %}
+                                            {% if USER.user_type == 1 or USER.user_type == 4 %}
+                                                <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#chatroomList">
+                                                    <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                    {{ _('All Rooms') }}
+                                                </a>
+                                            {% endif %}
+                                            {% if USER.user_type == 2 %}
+                                                <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#chatroomList">
+                                                    <i class="fas fa-comments fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                    {{ _('My Rooms') }}
+                                                </a>
+                                            {% endif %}
+                                            <a class="dropdown-item py-3" href="{{ url('logout') }}">
+                                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> {{ _('Logout') }}
+                                            </a>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                            {% if not USER %}
+                                <a class="btn-teal btn px-4 ml-lg-4" href="{{ url('login') }}">{{ _('Sign in') }}<i class="fas fa-arrow-right ml-1"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+                {% if SETTINGS.homepage_banner_view != 0 or SETTINGS.homepage_banner_view == '' %}
+                <header class="page-header page-header-dark bg-gradient-primary-to-secondary bgimg">
+                    <div class="page-header-content pt-2">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6" data-aos="fade-up">
+                                    <h1 class="page-header-title">{% if SETTINGS.homepage_title %}{{SETTINGS.homepage_title|raw}}{% else %}免费匿名在线聊天室{% endif %}</h1>
+                                    <p class="page-header-text mb-5 mt-4">
+                                        {% if SETTINGS.homepage_description %}
+                                            {{SETTINGS.homepage_description|htmlspecialchars_decode|raw}}
+                                        {% else %}
+                                        与其他成千上万来自世界各地的人在网上聊天分享生活，100%的自由与安全。
+                                        {% endif %}
+                                    </p>
+                                    {% if not USER %}
+                                        <a class="btn btn-teal btn-marketing rounded-pill lift lift-sm" href="{{ url('register') }}">{{ _('Create an Account') }}<i class="fas fa-arrow-right ml-1"></i></a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="50">
+                                    {% if SETTINGS.home_page_image %}
+                                        <img class="img-fluid" src="{{MEDIA_URL}}/settings/{{SETTINGS.home_page_image}}" />
+                                    {% else %}
+                                        <img class="img-fluid" src="{{STATIC_URL}}/img/homepage_1.svg" />
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                {% endif %}
+                {%block content%}{%endblock%}
+            </main>
+        </div>
+        <div class="modal fade rooms-modal" tabindex="-1" role="dialog" aria-labelledby="roomsModel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        {% include 'chat_room_update.html' %}
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!-- profile modal -->
+        {% include 'profile_modal.html' %}
+        {% include 'chat_room_list_modal.html' %}
+        <div id="layoutDefault_footer">
+            <footer class="footer pt-3 pb-3  bg-light footer-light">
+                <div class="container">
+                    <div class="row align-items-center">
+                          <div class="col-md-6 small">{% if SETTINGS.copyright %}{{SETTINGS.copyright|escape}}{% else %} Copyright &#xA9; <a href="http://xxxx.com/" target="_blank"> xxxx.com </a> {% endif %} </div>
+                        <div class="col-md-6 text-md-right small">
+                            {% if SETTINGS.enable_about %}
+                            <a href="{{ url('about') }}">{{ _('About Us') }}</a>
+                            &#xB7;
+                            {% endif %}
+                            {% if SETTINGS.enable_contact %}
+                            <a href="{{ url('contact') }}">{{ _('Contact Us') }}</a>
+                            &#xB7;
+                            {% endif %}
+                            {% if SETTINGS.enable_privacy %}
+                            <a href="{{ url('privacy') }}">{{ _('Privacy Policy') }}</a>
+                            &#xB7;
+                            {% endif %}
+                            {% if SETTINGS.enable_terms %}
+                            <a href="{{ url('terms') }}">{{ _("Terms & Conditions") }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    {% if SETTINGS.cookie_consent_popup %}
+    <!-- START Cookie Alert -->
+    <div class="alert text-center cookiealert" role="alert">
+        {% if SETTINGS.cookie_consent_message %}
+            {{ SETTINGS.cookie_consent_message|raw }}
+        {% else %}
+        <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website.
+        <a href="https://cookiesandyou.com/" target="_blank">Learn more</a>
+        {% endif %}
+        <button type="button" class="btn btn-primary btn-sm acceptcookies">
+            I agree
+        </button>
+    </div>
+    <!-- END Cookie Alert -->
+    {% endif %}
+    <script src="{{STATIC_URL}}/vendor/jquery/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/dropdown-datepicker/js/jquery.date-dropdowns.min.js"></script>
+    <script src="{{STATIC_URL}}/js/loadingoverlay.min.js" ></script>
+    <script src="{{STATIC_URL}}/vendor/select2/select2.min.js"></script>
+    <script src="{{STATIC_URL}}/vendor/toastr/toastr.min.js" ></script>
+    {% if SETTINGS.show_snow %}
+    <script src="{{STATIC_URL}}/js/snow.min.js" ></script>
+    {% endif %}
+    <script src="{{ url('scripts_js') }}"></script>
+    <script src="{{ url('index_js') }}"></script>
+
+</body>
+</html>

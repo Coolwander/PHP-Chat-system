@@ -1,0 +1,80 @@
+{% for chat_room in chat_rooms %}
+    <style media="screen">
+        {% if chat_room.cover_image %}
+            .card-{{chat_room.id}}:before {
+                background-image: url('{{MEDIA_URL}}/chatrooms/{{chat_room.cover_image}}');
+            }
+        {% endif %}
+    </style>
+    <div class="col-12 {% if chat_rooms|length >= 3 %} col-lg-4 col-md-6 {% else %} col-md-6 col-sm-6 {% endif %} mx-auto ">
+
+        <div class="card lrg chatroom-card card-{{chat_room.id}}">
+            <div class="header"></div>
+            <div class="container">
+
+                <div class="about-container">
+                    <h3 class="title">{{ chat_room.name }}
+                        {% if chat_room.is_protected %}
+                            <i data-toggle="tooltip" data-placement="top" title="Password Protected" class="fas fa-user-lock"></i>
+                        {% endif %}
+                        {% if not chat_room.is_visible %}
+                            <i data-toggle="tooltip" data-placement="top" title="Hidden Chat Room" class="fas fa-eye-slash"></i>
+                        {% endif %}
+                        {% if USER %}
+                        {% if USER.user_type == 1 or (USER.user_type == 4 and USER.user_type in chat_room.allowed_users) or USER.id == chat_room.created_by %}
+                            {% if chat_room.status == 2 %}
+                                <i data-toggle="tooltip" data-placement="top" title="Inactive Chat Room" class="fas fa-trash-alt"></i>
+                            {% endif %}
+                            | <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Edit Chat Room" class="edit-chatroom" data-edit-id="{{ chat_room.id }}" ><i class="fas fa-edit"></i></a></h3>
+                        {% endif %}
+                        {% endif %}
+                    </h3>
+                    {% if chat_room.description %}
+                        <p class="text" data-toggle="tooltip" data-placement="top" title="{{ chat_room.description }}">
+                            {{ chat_room.description }}
+                        </p>
+                    {% else %}
+                        <p class="text" data-toggle="tooltip" data-placement="top" title="Join with {{ chat_room.name }} chat room at {{SETTINGS.site_name}}.
+                            {% if not chat_room.is_visible %}
+                                {{ chat_room.name }} is public chat room. Everyone on {{SETTINGS.site_name}} will be able to join.
+                            {% else %}
+                                {{ chat_room.name }} is private chat room. Only people with the invite link will be able to join.
+                            {% endif %}
+                            {% if chat_room.is_protected %}
+                                You need {{ chat_room.name }} password to log in to the chat room.
+                            {% endif %}">
+                            Join with {{ chat_room.name }} chat room at {{SETTINGS.site_name}}.
+                            {% if not chat_room.is_visible %}
+                                {{ chat_room.name }} is public chat room. Everyone on {{SETTINGS.site_name}} will be able to join.
+                            {% else %}
+                                {{ chat_room.name }} is private chat room. Only people with the invite link will be able to join.
+                            {% endif %}
+                            {% if chat_room.is_protected %}
+                                You need {{ chat_room.name }} password to log in to the chat room.
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                    <div class="row align-items-end">
+                        <div class="col-5 pr-0">
+                            <h3 class="number">{{chat_room.users_count}}</h3>
+                            <h3 class="number-title">{{_("Joiners")}}</h3>
+                        </div>
+                        <div class="col-7">
+                            <div class="buttons-wrap">
+                                <div class="join-wrap">
+                                    <a href="{{  url('chat-room', {'chatroomslug':chat_room.slug}) }}" class="join">{{_("Join Chat")}}
+                                        {% if chat_room.is_protected %}
+                                            <i class="fas fa-lock"></i>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}

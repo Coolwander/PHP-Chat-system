@@ -1,0 +1,116 @@
+{% extends "base.min.html" %}
+{% block container %}
+<div class="container h-100">
+    <!-- Outer Row -->
+    <div class="row justify-content-center h-100 justify-content-center align-items-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        {% if not active_room %}
+                        <div class="col-lg-6 d-none d-lg-block bg-inactive-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-4">
+                                <div class="action-logo">
+                                    {% if SETTINGS.logo %}
+                                        <img class="" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}">
+                                    {% else %}
+                                        <img class="" src="{{STATIC_URL}}/img/logo.png">
+                                    {% endif %}
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-2">{{chat_room.name}} {{ _("chatroom is inactive") }}</h1>
+                                    <p class="mb-4">{{ _("This chat room has been deactivated. Please contact us for more information") }}</p>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn btn-primary btn-user btn-block" href="{{ url('index') }}">{{ _("Home") }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% elseif kicked_user %}
+                        <div class="col-lg-6 d-none d-lg-block bg-kicked-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-4">
+                                <div class="action-logo">
+                                    {% if SETTINGS.logo %}
+                                        <img class="" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}">
+                                    {% else %}
+                                        <img class="" src="{{STATIC_URL}}/img/logo.png">
+                                    {% endif %}
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-2">{{ _("You have been kicked out from") }} {{chat_room.name}}</h1>
+                                    <p class="mb-4">{{ _("Sorry, you have been kicked out from this chatroom due to a policy violation. Please contact us for more information") }}</p>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn btn-primary btn-user btn-block" href="{{ url('index') }}">{{ _("Home") }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% elseif access_denied %}
+                        <div class="col-lg-6 d-none d-lg-block bg-kicked-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-4">
+                                <div class="action-logo">
+                                    {% if SETTINGS.logo %}
+                                        <img class="" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}">
+                                    {% else %}
+                                        <img class="" src="{{STATIC_URL}}/img/logo.png">
+                                    {% endif %}
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-2">{{ _("Access is denied") }} {{chat_room.name}}</h1>
+                                    <p class="mb-4">{{ _("You may not have the appropriate permissions to access this room") }}</p>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn btn-primary btn-user btn-block" href="{{ url('index') }}">{{ _("Home") }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-lg-6 d-none d-lg-block {% if chat_room.is_protected %}bg-locked-image{% else %}bg-join-image{% endif %}"></div>
+                        <div class="col-lg-6">
+                            <div class="p-4">
+                                <div class="action-logo">
+                                    {% if SETTINGS.logo %}
+                                        <img class="" src="{{MEDIA_URL}}/settings/{{SETTINGS.logo}}">
+                                    {% else %}
+                                        <img class="" src="{{STATIC_URL}}/img/logo.png">
+                                    {% endif %}
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-2">{{ _("Welcome to") }} {{chat_room.name}}</h1>
+                                    {% if chat_room.description %}
+                                    <p class="mb-4">
+                                        <small >{{chat_room.description}}</small>
+                                    </p>
+                                    {% endif %}
+                                    <p class="mb-4">{{ _("You are about to join") }} {{chat_room.name}}. {% if chat_room.is_protected %} {{ _("enter the chatroom PIN and") }} {% endif %} {{ _("click the join button") }}</p>
+                                </div>
+                                {{ msg() }}
+                                <form class="user" method="POST">
+                                    {{ csrf_token()|raw }}
+                                    {% if chat_room.is_protected %}
+                                    <div class="form-group">
+                                        <input type="text" name="pin" class="form-control form-control-user" id="pin" aria-describedby="pin" placeholder="Enter Chatroom PIN">
+                                    </div>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        {{ _("Join Chatroom") }}
+                                    </button>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="{{ url('index') }}">{{ _("Home") }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
